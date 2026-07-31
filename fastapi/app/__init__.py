@@ -1,0 +1,1 @@
+"""WAPI FastAPI application package."""

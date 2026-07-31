@@ -1,0 +1,255 @@
+{
+  "info": {
+    "name": "WAPI - Self-Hosted WhatsApp API",
+    "description": "Collection for the WAPI self-hosted WhatsApp API (Baileys + FastAPI).\n\nSet the collection variables:\n  base_url  -> http://localhost:8000\n  api_key   -> your API key\n  session   -> session name (default: default)\n  number    -> recipient phone with country code, e.g. 919876543210\n\nAuthentication is handled automatically via the X-API-Key header.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "api_key", "value": "change-me-to-a-long-random-string" },
+    { "key": "session", "value": "default" },
+    { "key": "number", "value": "919876543210" }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "X-API-Key", "type": "string" },
+      { "key": "value", "value": "{{api_key}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health (no auth)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+          }
+        },
+        {
+          "name": "Status - all sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/status", "host": ["{{base_url}}"], "path": ["status"] }
+          }
+        },
+        {
+          "name": "List sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions", "host": ["{{base_url}}"], "path": ["sessions"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Start session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}/start", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}", "start"] }
+          }
+        },
+        {
+          "name": "Stop session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}/stop", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}", "stop"] }
+          }
+        },
+        {
+          "name": "Session status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}/status", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}", "status"] }
+          }
+        },
+        {
+          "name": "QR code (JSON)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}/qr", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}", "qr"] }
+          }
+        },
+        {
+          "name": "QR code (PNG)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}/qr.png", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}", "qr.png"] }
+          }
+        },
+        {
+          "name": "QR default (alias)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/qr?session={{session}}", "host": ["{{base_url}}"], "path": ["qr"], "query": [{ "key": "session", "value": "{{session}}" }] }
+          }
+        },
+        {
+          "name": "Logout session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}/logout", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}", "logout"] }
+          }
+        },
+        {
+          "name": "Logout default (alias)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "raw", "raw": "{\n  \"session\": \"{{session}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"] }
+          }
+        },
+        {
+          "name": "Delete session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/sessions/{{session}}", "host": ["{{base_url}}"], "path": ["sessions", "{{session}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send text",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "raw", "raw": "{\n  \"session\": \"{{session}}\",\n  \"number\": \"{{number}}\",\n  \"message\": \"Hello from WAPI\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{base_url}}/send-text", "host": ["{{base_url}}"], "path": ["send-text"] }
+          }
+        },
+        {
+          "name": "Send image (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "session", "value": "{{session}}", "type": "text" },
+                { "key": "number", "value": "{{number}}", "type": "text" },
+                { "key": "caption", "value": "Check this out", "type": "text" },
+                { "key": "file", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/send-image", "host": ["{{base_url}}"], "path": ["send-image"] }
+          }
+        },
+        {
+          "name": "Send image (base64 JSON)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "raw", "raw": "{\n  \"session\": \"{{session}}\",\n  \"number\": \"{{number}}\",\n  \"base64\": \"<base64-encoded-image>\",\n  \"mimetype\": \"image/png\",\n  \"caption\": \"Check this out\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{base_url}}/send-image", "host": ["{{base_url}}"], "path": ["send-image"] }
+          }
+        },
+        {
+          "name": "Send document/PDF/Excel (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "session", "value": "{{session}}", "type": "text" },
+                { "key": "number", "value": "{{number}}", "type": "text" },
+                { "key": "caption", "value": "Monthly report", "type": "text" },
+                { "key": "file", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/send-document", "host": ["{{base_url}}"], "path": ["send-document"] }
+          }
+        },
+        {
+          "name": "Send audio / voice note (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "session", "value": "{{session}}", "type": "text" },
+                { "key": "number", "value": "{{number}}", "type": "text" },
+                { "key": "ptt", "value": "true", "type": "text" },
+                { "key": "file", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/send-audio", "host": ["{{base_url}}"], "path": ["send-audio"] }
+          }
+        },
+        {
+          "name": "Send video (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "session", "value": "{{session}}", "type": "text" },
+                { "key": "number", "value": "{{number}}", "type": "text" },
+                { "key": "caption", "value": "Watch this", "type": "text" },
+                { "key": "file", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/send-video", "host": ["{{base_url}}"], "path": ["send-video"] }
+          }
+        },
+        {
+          "name": "Send sticker (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "session", "value": "{{session}}", "type": "text" },
+                { "key": "number", "value": "{{number}}", "type": "text" },
+                { "key": "file", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/send-sticker", "host": ["{{base_url}}"], "path": ["send-sticker"] }
+          }
+        },
+        {
+          "name": "Send contact",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "raw", "raw": "{\n  \"session\": \"{{session}}\",\n  \"number\": \"{{number}}\",\n  \"name\": \"John Doe\",\n  \"phone\": \"919876543211\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{base_url}}/send-contact", "host": ["{{base_url}}"], "path": ["send-contact"] }
+          }
+        },
+        {
+          "name": "Send location",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "raw", "raw": "{\n  \"session\": \"{{session}}\",\n  \"number\": \"{{number}}\",\n  \"latitude\": 12.9716,\n  \"longitude\": 77.5946,\n  \"name\": \"Bengaluru\",\n  \"address\": \"Karnataka, India\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{base_url}}/send-location", "host": ["{{base_url}}"], "path": ["send-location"] }
+          }
+        }
+      ]
+    }
+  ]
+}

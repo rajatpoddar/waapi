@@ -1,0 +1,30 @@
+# Keep the root build context (used by the fastapi image) lean.
+# Session credentials, media and logs are bind-mounted volumes, never images.
+
+# Other project areas not needed by the fastapi image (they build from their own contexts)
+baileys
+webhook_receiver
+scripts
+docs
+
+# Dependencies / build artifacts
+**/node_modules
+**/.venv
+**/__pycache__
+**/*.pyc
+dashboard/dist
+baileys/dist
+
+# Runtime data (bind-mounted via volumes - never ship in an image)
+auth
+baileys/auth
+uploads
+logs
+webhook_receiver/data
+
+# VCS / env / OS junk
+.git
+.gitignore
+.env
+.DS_Store
+*.log

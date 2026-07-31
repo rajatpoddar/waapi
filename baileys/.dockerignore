@@ -1,0 +1,9 @@
+node_modules
+dist
+auth
+uploads
+logs
+tests
+.git
+*.log
+.env
