@@ -2,11 +2,19 @@
 from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import Response
 
+from fastapi import Body
+
 from ..auth import verify_api_key
 from ..baileys_client import get_client
 from ..schemas import LogoutRequest
 
 router = APIRouter(tags=["Sessions"], dependencies=[Depends(verify_api_key)])
+
+
+@router.post("/sessions/{name}/rename", summary="Rename a session")
+async def rename_session(name: str, new_name: str = Body(..., embed=True)) -> dict:
+    """Rename a session. Moves credentials and updates the session name."""
+    return await get_client().rename_session(name, new_name)
 
 
 @router.post("/sessions/{name}/start", summary="Create/start a WhatsApp session")

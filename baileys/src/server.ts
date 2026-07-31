@@ -266,6 +266,17 @@ app.post(
   }),
 )
 
+app.post(
+  '/sessions/:name/rename',
+  asyncHandler(async (req, res) => {
+    const body = (req.body ?? {}) as Record<string, unknown>
+    const newName = typeof body.newName === 'string' ? body.newName.trim() : ''
+    if (!newName) throw new ApiError(400, 'Missing required field: newName', 'MISSING_FIELD')
+    await manager.rename(req.params.name, newName)
+    ok(res, { session: manager.get(newName).getStatus() })
+  }),
+)
+
 app.delete(
   '/sessions/:name',
   asyncHandler(async (req, res) => {

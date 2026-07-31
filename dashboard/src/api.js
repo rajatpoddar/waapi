@@ -51,6 +51,7 @@ export const api = {
   stopSession: (name) => req(`/sessions/${encodeURIComponent(name)}/stop`, { method: 'POST' }),
   logoutSession: (name) => req(`/sessions/${encodeURIComponent(name)}/logout`, { method: 'POST' }),
   deleteSession: (name) => req(`/sessions/${encodeURIComponent(name)}`, { method: 'DELETE' }),
+  renameSession: (name, newName) => req(`/sessions/${encodeURIComponent(name)}/rename`, { method: 'POST', body: JSON.stringify({ new_name: newName }) }),
   qrPngUrl: (name) =>
     `/sessions/${encodeURIComponent(name)}/qr.png?apikey=${encodeURIComponent(getApiKey())}&t=${Date.now()}`,
   sendText: (payload) => req('/send-text', { method: 'POST', body: JSON.stringify(payload) }),

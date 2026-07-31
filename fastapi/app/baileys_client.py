@@ -109,6 +109,9 @@ class BaileysClient:
     async def delete_session(self, name: str) -> dict:
         return await self._request("DELETE", f"/sessions/{quote(name, safe='')}")
 
+    async def rename_session(self, name: str, new_name: str) -> dict:
+        return await self._request("POST", f"/sessions/{quote(name, safe='')}/rename", json={"newName": new_name})
+
     async def session_status(self, name: str) -> dict:
         return await self._request("GET", f"/sessions/{quote(name, safe='')}/status")
 

@@ -1,5 +1,6 @@
 /** SessionManager: owns all WhatsAppSession instances (one per WhatsApp number). */
 import fs from 'node:fs'
+import path from 'node:path'
 import { config } from './config.js'
 import { logger } from './logger.js'
 import { WhatsAppSession } from './session.js'
@@ -39,6 +40,49 @@ export class SessionManager {
 
   async logout(name: string): Promise<void> {
     await this.get(name).logout()
+  }
+
+  async rename(name: string, newName: string): Promise<void> {
+    const safeName = sanitizeSessionName(name)
+    const safeNewName = sanitizeSessionName(newName)
+    if (safeName === safeNewName) {
+      return // no-op
+    }
+    if (this.sessions.has(safeNewName)) {
+      throw new ApiError(409, `Session "${newName}" already exists`, 'SESSION_ALREADY_EXISTS')
+    }
+    const session = this.get(safeName)
+    const wasOpen = session.state === 'open'
+
+    // Stop the session first
+    await session.stop()
+
+    // Rename the auth directory on disk
+    const oldAuthDir = path.join(config.authDir, safeName)
+    const newAuthDir = path.join(config.authDir, safeNewName)
+    try {
+      if (fs.existsSync(oldAuthDir)) {
+        fs.renameSync(oldAuthDir, newAuthDir)
+      }
+    } catch (err) {
+      logger.error({ err, from: oldAuthDir, to: newAuthDir }, 'failed to rename auth directory')
+      throw new ApiError(500, 'Failed to rename session auth directory', 'RENAME_FAILED')
+    }
+
+    // Remove old session from map
+    this.sessions.delete(safeName)
+
+    // Create a new session with the new name.
+    // The auth directory has been renamed, so the new session
+    // will pick up the auth state from the new directory.
+    const newSession = this.spawn(safeNewName, true)
+
+    // Restart if it was previously open
+    if (wasOpen) {
+      await newSession.start()
+    }
+
+    logger.info({ from: safeName, to: safeNewName }, 'session renamed')
   }
 
   async delete(name: string): Promise<void> {
