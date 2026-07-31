@@ -11,15 +11,18 @@ export default function SessionCard({ session, onChanged }) {
   const inputRef = useRef(null)
   const connecting = session.state === 'connecting'
 
+  // Poll QR while connecting, but NEVER while an action (stop/delete/logout) is
+  // in flight - otherwise the in-flight requests hit the QR endpoint and can
+  // resurrect the session the user just closed.
   useEffect(() => {
-    if (!connecting) {
+    if (!connecting || busy) {
       setQr(null)
       return undefined
     }
     setQr(api.qrPngUrl(session.name))
     const timer = setInterval(() => setQr(api.qrPngUrl(session.name)), 5000)
     return () => clearInterval(timer)
-  }, [connecting, session.name])
+  }, [connecting, session.name, busy])
 
   useEffect(() => {
     if (renaming && inputRef.current) {

@@ -68,11 +68,22 @@ export default function AddSessionButton({ onCreated }) {
     }
   }
 
-  const cancel = () => {
+  const cancel = async () => {
+    // If a session was just created and is still connecting, DELETE it entirely
+    // (it was never paired, so stop() would just leave a stale closed card).
+    const pendingName = qrInfo?.name
     setOpen(false)
     setName('')
     setErr('')
     setQrInfo(null)
+    if (pendingName) {
+      try {
+        await api.deleteSession(pendingName)
+        onCreated()
+      } catch {
+        // ignore - session may already be gone
+      }
+    }
   }
 
   if (!open) {

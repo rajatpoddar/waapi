@@ -245,6 +245,8 @@ app.get('/sessions', (_req, res) => {
 app.post(
   '/sessions/:name/start',
   asyncHandler(async (req, res) => {
+    // Explicit user action: allow a previously stopped/deleted name again.
+    manager.clearTombstone(req.params.name)
     const session = await manager.start(req.params.name)
     ok(res, { session: session.getStatus() })
   }),
@@ -295,9 +297,9 @@ app.get(
 app.get(
   '/sessions/:name/qr',
   asyncHandler(async (req, res) => {
-    // Auto-create the session so a fresh install can pair immediately
-    // (GET /qr.png from the README just works). Respects AUTO_CREATE_SESSION.
-    const session = await manager.start(req.params.name)
+    // Auto-create ONLY brand-new names (README flow) - never resurrect a
+    // session the user explicitly stopped or deleted (tombstones).
+    const session = await manager.getForQR(req.params.name)
     const { qr, expiresAt } = session.getQR()
     ok(res, { session: session.getStatus(), qr, expiresAt })
   }),
@@ -306,7 +308,7 @@ app.get(
 app.get(
   '/sessions/:name/qr.png',
   asyncHandler(async (req, res) => {
-    const session = await manager.start(req.params.name)
+    const session = await manager.getForQR(req.params.name)
     const { qr } = session.getQR()
     const png = await QRCode.toBuffer(qr, { width: 420, margin: 1 })
     res.type('image/png').send(png)
@@ -317,7 +319,7 @@ app.get(
   '/qr',
   asyncHandler(async (req, res) => {
     const name = getSessionName(req)
-    const session = await manager.start(name)
+    const session = await manager.getForQR(name)
     const { qr, expiresAt } = session.getQR()
     ok(res, { session: session.getStatus(), qr, expiresAt })
   }),
@@ -327,7 +329,7 @@ app.get(
   '/qr.png',
   asyncHandler(async (req, res) => {
     const name = getSessionName(req)
-    const session = await manager.start(name)
+    const session = await manager.getForQR(name)
     const { qr } = session.getQR()
     const png = await QRCode.toBuffer(qr, { width: 420, margin: 1 })
     res.type('image/png').send(png)
