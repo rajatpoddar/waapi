@@ -37,4 +37,5 @@ export const api = {
     `/sessions/${encodeURIComponent(name)}/qr.png?apikey=${encodeURIComponent(getApiKey())}&t=${Date.now()}`,
   sendText: (payload) => req('/send-text', { method: 'POST', body: JSON.stringify(payload) }),
   webhooks: (limit = 60) => req(`/admin-api/webhooks?limit=${limit}`),
+  sessionStatus: (name) => req(`/sessions/${encodeURIComponent(name)}/status`),
 }

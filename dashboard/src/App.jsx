@@ -3,6 +3,7 @@ import { api, getApiKey, setApiKey } from './api'
 import SessionCard from './components/SessionCard'
 import WebhookFeed from './components/WebhookFeed'
 import SendPanel from './components/SendPanel'
+import AddSessionButton from './components/AddSessionButton'
 
 export default function App() {
   const [apiKey, setApiKeyState] = useState(getApiKey())
@@ -80,13 +81,16 @@ export default function App() {
         <section className="col">
           <div className="section-head">
             <h2>Sessions</h2>
-            <button className="ghost" onClick={refresh}>
-              Refresh
-            </button>
+            <div className="section-actions">
+              <AddSessionButton onCreated={refresh} />
+              <button className="ghost" onClick={refresh}>
+                Refresh
+              </button>
+            </div>
           </div>
           <div className="cards">
             {sessions.length === 0 && !error && (
-              <p className="muted">No sessions yet — create one with <span className="mono">POST /sessions/&#123;name&#125;/start</span> and scan the QR.</p>
+              <p className="muted">No sessions yet — click <strong>+ Add Session</strong> to create one and scan the QR.</p>
             )}
             {sessions.map((s) => (
               <SessionCard key={s.name} session={s} onChanged={refresh} />

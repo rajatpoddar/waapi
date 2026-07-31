@@ -233,6 +233,93 @@ body {
   gap: 10px;
 }
 
+.section-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.add-btn {
+  color: var(--green) !important;
+  border-color: rgba(37, 211, 102, 0.35) !important;
+  font-weight: 600;
+}
+.add-btn:hover {
+  border-color: var(--green) !important;
+  background: rgba(37, 211, 102, 0.08);
+}
+
+.add-session-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 4px;
+  animation: fadeIn 0.2s ease;
+}
+.add-session-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.add-session-header h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--green);
+}
+.add-session-header .ghost.small {
+  padding: 2px 8px;
+  font-size: 14px;
+  border: none;
+  color: var(--dim);
+  cursor: pointer;
+}
+.add-session-header .ghost.small:hover {
+  color: var(--text);
+}
+
+.add-session-form .row {
+  display: flex;
+  gap: 8px;
+}
+.add-session-form input {
+  flex: 1;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 9px 11px;
+  font-size: 13px;
+  outline: none;
+}
+.add-session-form input:focus {
+  border-color: var(--green);
+}
+
+.qr-preview {
+  margin-top: 14px;
+  text-align: center;
+  padding: 14px;
+  background: var(--panel2);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+.qr-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px;
+}
+.qr-preview p {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+.qr-preview .small {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
 .qr {
   margin-top: 14px;
   text-align: center;
