@@ -44,6 +44,13 @@ export default function SessionCard({ session, onChanged }) {
         <div className="qr">
           <img src={qr} alt={`${session.name} QR code`} />
           <p className="dim">Scan with WhatsApp → Settings → Linked devices</p>
+          <button
+            className="btn danger qr-cancel"
+            disabled={!!busy}
+            onClick={() => run(() => api.stopSession(session.name), 'cancelling')}
+          >
+            {busy === 'cancelling' ? 'Cancelling…' : 'Cancel & Close'}
+          </button>
         </div>
       )}
 
