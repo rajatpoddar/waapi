@@ -11,39 +11,35 @@ export default function AddSessionButton({ onCreated }) {
 
   // Poll QR URL every 5s while visible (QR expires every 30s)
   useEffect(() => {
-    if (qrInfo) {
-      setQrInfo((prev) => ({ ...prev, qrUrl: api.qrPngUrl(prev.name) }))
-      qrTimer.current = setInterval(() => {
-        setQrInfo((prev) => {
-          if (!prev) return prev
-          return { ...prev, qrUrl: api.qrPngUrl(prev.name) }
-        })
-      }, 5000)
-    }
+    if (!qrInfo) return
+    qrTimer.current = setInterval(() => {
+      setQrInfo((prev) => {
+        if (!prev) return prev
+        return { ...prev, qrUrl: api.qrPngUrl(prev.name) }
+      })
+    }, 5000)
     return () => {
       if (qrTimer.current) {
         clearInterval(qrTimer.current)
         qrTimer.current = null
       }
     }
-  }, [qrInfo?.name])
+  }, [qrInfo])
 
-  // Dismiss QR when session becomes 'open'
+  // Check if session became 'open' every 3s and auto-dismiss
   useEffect(() => {
-    if (qrInfo && !busy) {
-      // Give the parent refresh a moment to update, then check
-      const check = setTimeout(async () => {
-        try {
-          const status = await api.sessionStatus(qrInfo.name)
-          if (status.session?.state === 'open') {
-            setQrInfo(null)
-          }
-        } catch {
-          // ignore
+    if (!qrInfo || busy) return
+    const check = setInterval(async () => {
+      try {
+        const status = await api.sessionStatus(qrInfo.name)
+        if (status.session?.state === 'open') {
+          setQrInfo(null)
         }
-      }, 2000)
-      return () => clearTimeout(check)
-    }
+      } catch {
+        // ignore
+      }
+    }, 3000)
+    return () => clearInterval(check)
   }, [qrInfo, busy])
 
   const create = async (e) => {
@@ -52,11 +48,16 @@ export default function AddSessionButton({ onCreated }) {
     if (!trimmed) return
     setBusy(true)
     setErr('')
-    setQrInfo({ name: trimmed, qrUrl: api.qrPngUrl(trimmed) })
     try {
-      await api.startSession(trimmed)
-      // After start, the engine will generate a QR — the polling interval
-      // above will keep refreshing the image URL.
+      const result = await api.startSession(trimmed)
+      // If session is already open, no QR needed
+      if (result.session?.state === 'open') {
+        setName('')
+        setOpen(false)
+        onCreated()
+        return
+      }
+      setQrInfo({ name: trimmed, qrUrl: api.qrPngUrl(trimmed) })
       setName('')
       onCreated()
     } catch (ex) {
