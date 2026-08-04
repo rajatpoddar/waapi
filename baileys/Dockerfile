@@ -39,9 +39,9 @@ COPY --from=build /app/dist ./dist
 
 RUN mkdir -p /app/auth /app/uploads /app/logs
 
-EXPOSE 3000
+EXPOSE 2729
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=30s \
-  CMD node -e "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD node -e "fetch('http://localhost:2729/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 CMD ["node", "dist/server.js"]

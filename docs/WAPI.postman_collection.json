@@ -1,11 +1,11 @@
 {
   "info": {
     "name": "WAPI - Self-Hosted WhatsApp API",
-    "description": "Collection for the WAPI self-hosted WhatsApp API (Baileys + FastAPI).\n\nSet the collection variables:\n  base_url  -> http://localhost:8000\n  api_key   -> your API key\n  session   -> session name (default: default)\n  number    -> recipient phone with country code, e.g. 919876543210\n\nAuthentication is handled automatically via the X-API-Key header.",
+    "description": "Collection for the WAPI self-hosted WhatsApp API (Baileys + FastAPI).\n\nSet the collection variables:\n  base_url  -> http://localhost:2728\n  api_key   -> your API key\n  session   -> session name (default: default)\n  number    -> recipient phone with country code, e.g. 919876543210\n\nAuthentication is handled automatically via the X-API-Key header.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "base_url", "value": "http://localhost:2728" },
     { "key": "api_key", "value": "change-me-to-a-long-random-string" },
     { "key": "session", "value": "default" },
     { "key": "number", "value": "919876543210" }

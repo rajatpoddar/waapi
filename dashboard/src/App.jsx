@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { api, getApiKey, getSettings, setApiKey } from './api'
+import { api, clearApiKey, getApiKey, getSettings, verifyKey } from './api'
 import SessionCard from './components/SessionCard'
 import WebhookFeed from './components/WebhookFeed'
 import SendPanel from './components/SendPanel'
 import AddSessionButton from './components/AddSessionButton'
 import SettingsPanel from './components/SettingsPanel'
+import LoginScreen from './components/LoginScreen'
 
 const TABS = ['sessions', 'webhooks', 'settings']
 
 export default function App() {
-  const [apiKey, setApiKeyState] = useState(getApiKey())
-  const [apiKeyDraft, setApiKeyDraft] = useState(getApiKey())
+  const [authed, setAuthed] = useState(false)
+  const [checking, setChecking] = useState(true)
   const [health, setHealth] = useState(null)
   const [sessions, setSessions] = useState([])
   const [webhooks, setWebhooks] = useState([])
@@ -32,25 +33,60 @@ export default function App() {
     }
   }, [settings.pageSize])
 
+  // Validate the stored API key once on mount.
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const stored = getApiKey()
+      if (stored) {
+        const result = await verifyKey(stored)
+        if (cancelled) return
+        if (result === 'ok') {
+          setAuthed(true)
+        } else {
+          clearApiKey()
+        }
+      }
+      setChecking(false)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   // Auto-refresh
   useEffect(() => {
-    if (settings.autoRefresh) {
-      refresh()
-      refreshTimer.current = setInterval(refresh, 5000)
-    }
+    if (!authed || !settings.autoRefresh) return
+    refresh()
+    refreshTimer.current = setInterval(refresh, 5000)
     return () => {
       if (refreshTimer.current) {
         clearInterval(refreshTimer.current)
         refreshTimer.current = null
       }
     }
-  }, [refresh, settings.autoRefresh])
+  }, [authed, refresh, settings.autoRefresh])
 
-  const saveKey = () => {
-    setApiKey(apiKeyDraft)
-    setApiKeyState(apiKeyDraft)
-    setSettings(getSettings())
-    setTimeout(refresh, 200)
+  const handleLogout = () => {
+    clearApiKey()
+    setAuthed(false)
+    setSessions([])
+    setWebhooks([])
+    setHealth(null)
+    setError('')
+    setActiveTab('sessions')
+  }
+
+  if (checking) {
+    return (
+      <div className="login-screen">
+        <div className="login-card login-card--loading">Loading…</div>
+      </div>
+    )
+  }
+
+  if (!authed) {
+    return <LoginScreen onAuthed={() => setAuthed(true)} />
   }
 
   const connected = sessions.filter((s) => s.state === 'open').length
@@ -103,16 +139,9 @@ export default function App() {
             <span className={`status-dot ${engineOnline ? 'ok' : 'bad'}`} />
             <span className="status-text">{engineOnline ? 'Engine online' : 'Engine offline'}</span>
           </div>
-          <div className="key-input sidebar-key">
-            <input
-              type="password"
-              placeholder="API key"
-              value={apiKeyDraft}
-              onChange={(e) => setApiKeyDraft(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && saveKey()}
-            />
-            <button onClick={saveKey}>Save</button>
-          </div>
+          <button className="ghost sidebar-logout" onClick={handleLogout} title="Clear API key and lock the dashboard">
+            🔒 Sign out
+          </button>
         </div>
       </aside>
 
@@ -151,7 +180,6 @@ export default function App() {
         {error && (
           <div className="banner">
             ⚠️ {error}
-            {!apiKey && ' — enter your API key in the sidebar to load data.'}
           </div>
         )}
 

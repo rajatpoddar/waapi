@@ -7,20 +7,20 @@ delivery/read confirmations in real time.
 
 ## Run
 
-`python scripts/dev.py up` starts it automatically on port **9001**
-(engine wired to it via `WEBHOOK_URL=http://localhost:9001/webhook`).
+`python scripts/dev.py up` starts it automatically on port **2730**
+(engine wired to it via `WEBHOOK_URL=http://localhost:2730/webhook`).
 
 Or manually:
 
 ```bash
-fastapi/.venv/bin/python -m uvicorn webhook_receiver.app:app --host 127.0.0.1 --port 9001
+fastapi/.venv/bin/python -m uvicorn webhook_receiver.app:app --host 127.0.0.1 --port 2730
 ```
 
 ## View
 
-- **Dashboard:** http://localhost:9001 (auto-refreshes every 5s)
-- **JSON:** http://localhost:9001/events
-- **Swagger:** http://localhost:9001/docs
+- **Dashboard:** http://localhost:2730 (auto-refreshes every 5s)
+- **JSON:** http://localhost:2730/events
+- **Swagger:** http://localhost:2730/docs
 
 Events are appended to `logs/webhooks.log` (one JSON object per line).
 

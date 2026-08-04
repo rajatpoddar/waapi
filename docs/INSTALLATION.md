@@ -62,7 +62,7 @@ Docker will:
 
 ```bash
 docker compose ps              # both containers should be "healthy"
-curl http://localhost:8000/health
+curl http://localhost:2728/health
 ```
 
 Expected:
@@ -83,13 +83,13 @@ export API_KEY="<the key you set in .env>"
 Open the QR image in a browser:
 
 ```
-http://<server-ip>:8000/qr.png
+http://<server-ip>:2728/qr.png
 ```
 
 or fetch the raw QR JSON:
 
 ```bash
-curl http://localhost:8000/qr -H "X-API-Key: $API_KEY"
+curl http://localhost:2728/qr -H "X-API-Key: $API_KEY"
 ```
 
 On your phone: **WhatsApp → Settings → Linked devices → Link a device** → scan the QR.
@@ -97,7 +97,7 @@ On your phone: **WhatsApp → Settings → Linked devices → Link a device** �
 Within a few seconds the session state becomes `open`:
 
 ```bash
-curl http://localhost:8000/status -H "X-API-Key: $API_KEY"
+curl http://localhost:2728/status -H "X-API-Key: $API_KEY"
 ```
 
 > The QR refreshes roughly every 30 s. If the code expired, reload the page.
@@ -106,7 +106,7 @@ curl http://localhost:8000/status -H "X-API-Key: $API_KEY"
 ## 6. Send your first message
 
 ```bash
-curl -X POST http://localhost:8000/send-text \
+curl -X POST http://localhost:2728/send-text \
   -H "X-API-Key: $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"session":"default","number":"919876543210","message":"Hello from WAPI"}'
@@ -135,16 +135,16 @@ Each WhatsApp number needs its own session. Sessions are created on first use or
 explicitly:
 
 ```bash
-curl -X POST http://localhost:8000/sessions/9198xxxxxxxx/start -H "X-API-Key: $API_KEY"
-curl "http://localhost:8000/sessions/9198xxxxxxxx/qr.png" -H "X-API-Key: $API_KEY"   # scan this
-curl -X POST http://localhost:8000/sessions/9170xxxxxxxx/start -H "X-API-Key: $API_KEY"
-curl "http://localhost:8000/sessions/9170xxxxxxxx/qr.png" -H "X-API-Key: $API_KEY"   # scan this
+curl -X POST http://localhost:2728/sessions/9198xxxxxxxx/start -H "X-API-Key: $API_KEY"
+curl "http://localhost:2728/sessions/9198xxxxxxxx/qr.png" -H "X-API-Key: $API_KEY"   # scan this
+curl -X POST http://localhost:2728/sessions/9170xxxxxxxx/start -H "X-API-Key: $API_KEY"
+curl "http://localhost:2728/sessions/9170xxxxxxxx/qr.png" -H "X-API-Key: $API_KEY"   # scan this
 ```
 
 Then send per session:
 
 ```bash
-curl -X POST http://localhost:8000/send-text \
+curl -X POST http://localhost:2728/send-text \
   -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
   -d '{"session":"9198xxxxxxxx","number":"919876543210","message":"hi"}'
 ```
@@ -199,4 +199,4 @@ tar czf wapi-backup-$(date +%F).tar.gz auth .env
 | `WhatsApp not connected` (409) | Session exists but isn't `open` — check `/status`, pair with QR if needed |
 | Session logs out by itself | WhatsApp logged the device out (e.g. too many parallel instances) — re-pair |
 | Sends fail with timeouts | Keep `SEND_DELAY_MS` > 0 and low volumes; WhatsApp limits unofficial clients |
-| Can't reach port 8000 | Check firewall/security group; on Synology see [SYNAS.md](SYNAS.md) |
+| Can't reach port 2728 | Check firewall/security group; on Synology see [SYNAS.md](SYNAS.md) |

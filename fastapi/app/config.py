@@ -12,11 +12,11 @@ class Settings(BaseSettings):
     jwt_secret: str | None = None
 
     # --- engine ---
-    baileys_url: str = "http://baileys:3000"
+    baileys_url: str = "http://baileys:2729"
 
     # --- admin dashboard ---
     # Where the local webhook receiver lives (used by /admin-api/webhooks).
-    webhook_receiver_url: str = "http://localhost:9001"
+    webhook_receiver_url: str = "http://localhost:2730"
 
     # --- api behaviour ---
     cors_origins: str = "*"

@@ -55,7 +55,7 @@ async def session_qr(name: str, request: Request) -> dict:
 
 @router.get("/sessions/{name}/qr.png", summary="QR code as a PNG image")
 async def session_qr_image(name: str, request: Request) -> Response:
-    """Returns a scannable PNG. Open http://<host>:8000/sessions/<name>/qr.png in a browser."""
+    """Returns a scannable PNG. Open http://<host>:2728/sessions/<name>/qr.png in a browser."""
     png = await get_client().session_qr_image(name)
     return Response(content=png, media_type="image/png")
 

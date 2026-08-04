@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Dev server proxies API calls to the FastAPI backend (:8000) and the
+// Dev server proxies API calls to the FastAPI backend (:2728) and the
 // admin-api webhook proxy. Production builds are served by FastAPI itself
 // at /admin (no separate server needed).
 export default defineConfig({
@@ -12,12 +12,12 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/health': 'http://localhost:8000',
-      '/status': 'http://localhost:8000',
-      '/sessions': 'http://localhost:8000',
-      '/contacts': 'http://localhost:8000',
-      '/send-text': 'http://localhost:8000',
-      '/admin-api': 'http://localhost:8000',
+      '/health': 'http://localhost:2728',
+      '/status': 'http://localhost:2728',
+      '/sessions': 'http://localhost:2728',
+      '/contacts': 'http://localhost:2728',
+      '/send-text': 'http://localhost:2728',
+      '/admin-api': 'http://localhost:2728',
     },
   },
   build: {

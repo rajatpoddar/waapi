@@ -192,43 +192,16 @@ body {
   color: var(--dim);
 }
 
-.sidebar-key {
-  display: flex;
-  gap: 4px;
-}
-
-.sidebar-key input {
-  flex: 1;
-  background: var(--panel2);
-  border: 1px solid var(--line);
-  color: var(--text);
-  border-radius: 6px;
-  padding: 6px 8px;
+.sidebar-footer .sidebar-logout {
+  width: 100%;
+  text-align: center;
   font-size: 12px;
-  outline: none;
-  min-width: 0;
-  width: 0;
+  padding: 7px 10px;
 }
 
-.sidebar-key input:focus {
-  border-color: var(--green);
-}
-
-.sidebar-key button {
-  background: var(--panel2);
-  border: 1px solid var(--line);
-  color: var(--text);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all var(--transition);
-  white-space: nowrap;
-}
-
-.sidebar-key button:hover {
-  border-color: var(--green);
-  color: var(--green);
+.sidebar-footer .sidebar-logout:hover {
+  border-color: var(--red);
+  color: #fecaca;
 }
 
 /* ─── Main Area ─── */
@@ -939,6 +912,159 @@ body {
   color: #bfdbfe;
 }
 
+/* ─── Login Screen ─── */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    radial-gradient(900px 500px at 80% -10%, rgba(37, 211, 102, 0.08), transparent 60%),
+    radial-gradient(700px 400px at 10% 110%, rgba(59, 130, 246, 0.08), transparent 60%),
+    var(--bg);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: linear-gradient(180deg, var(--panel), #0a1122);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 36px 30px 28px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.25s ease;
+}
+
+.login-card--loading {
+  text-align: center;
+  color: var(--dim);
+  padding: 28px;
+}
+
+.login-logo {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 16px;
+  border-radius: 14px;
+  background: var(--green);
+  color: #0b1220;
+  font-weight: 800;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+}
+
+.login-title {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 0.3px;
+}
+
+.login-subtitle {
+  margin: 0 0 24px;
+  text-align: center;
+  color: var(--dim);
+  font-size: 13px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-input-wrap {
+  position: relative;
+}
+
+.login-input {
+  width: 100%;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 12px 42px 12px 14px;
+  font-size: 14px;
+  outline: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.login-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
+}
+
+.login-eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  opacity: 0.6;
+  transition: opacity var(--transition);
+  line-height: 1;
+}
+
+.login-eye:hover {
+  opacity: 1;
+}
+
+.login-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fecaca;
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 12.5px;
+}
+
+.login-btn {
+  background: var(--green);
+  border: 1px solid var(--green);
+  color: #0b1220;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  padding: 11px;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: inherit;
+}
+
+.login-btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.login-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.login-hint {
+  margin: 20px 0 0;
+  text-align: center;
+  color: var(--dim);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.login-hint code {
+  background: var(--panel3);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 11px;
+  color: #baf5d3;
+}
+
 /* ─── Animations ─── */
 @keyframes fadeIn {
   from {
@@ -961,8 +1087,7 @@ body {
   .nav-label,
   .nav-badge,
   .sidebar-status .status-text,
-  .sidebar-key input,
-  .sidebar-key button {
+  .sidebar-logout {
     display: none;
   }
 
@@ -986,10 +1111,6 @@ body {
 
   .sidebar-footer {
     padding: 8px;
-  }
-
-  .sidebar-key {
-    display: none;
   }
 
   .sidebar-status {

@@ -2,7 +2,7 @@
 #  WAPI - Self-Hosted WhatsApp API
 #  One command to start everything:
 #      docker compose up -d
-#  REST API (Swagger docs):  http://<host>:8000/docs
+#  REST API (Swagger docs):  http://<host>:2728/docs
 # =====================================================================
 
 name: wapi
@@ -17,13 +17,13 @@ services:
     env_file:
       - .env
     environment:
-      PORT: 3000
+      PORT: 2729
       AUTH_DIR: /app/auth
       UPLOAD_DIR: /app/uploads
       LOG_DIR: /app/logs
     # Uncomment to expose the engine directly (advanced use, not required).
     # ports:
-    #   - "3000:3000"
+    #   - "2729:2729"
     volumes:
       - ./auth:/app/auth      # persistent WhatsApp sessions
       - ./uploads:/app/uploads  # media saved by the engine
@@ -31,7 +31,7 @@ services:
     networks:
       - wapi
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:2729/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -44,11 +44,11 @@ services:
     container_name: wapi-fastapi
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "2728:2728"
     env_file:
       - .env
     environment:
-      BAILEYS_URL: http://baileys:3000
+      BAILEYS_URL: http://baileys:2729
       LOG_DIR: /app/logs
     volumes:
       - ./logs:/app/logs      # API logs
@@ -58,7 +58,7 @@ services:
     networks:
       - wapi
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health', timeout=5);print('ok')"]
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:2728/health', timeout=5);print('ok')"]
       interval: 30s
       timeout: 5s
       retries: 3

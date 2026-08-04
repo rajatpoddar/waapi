@@ -11,6 +11,28 @@ export function setApiKey(key) {
   localStorage.setItem(KEY_STORAGE, key)
 }
 
+export function clearApiKey() {
+  localStorage.removeItem(KEY_STORAGE)
+}
+
+// Validate an API key against a protected endpoint before saving it.
+// Returns 'ok' | 'invalid' | 'unreachable' so callers can distinguish
+// a bad key from a server that is simply down.
+export async function verifyKey(key) {
+  try {
+    const res = await fetch('/status', {
+      headers: { 'X-API-Key': key },
+    })
+    if (res.ok) {
+      await res.json()
+      return 'ok'
+    }
+    return 'invalid'
+  } catch {
+    return 'unreachable'
+  }
+}
+
 export function getSettings() {
   return {
     pageSize: parseInt(localStorage.getItem(PAGE_SIZE_STORAGE) || '30', 10),

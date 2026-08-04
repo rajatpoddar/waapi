@@ -13,7 +13,7 @@ npm install
 npm run build        # -> dashboard/dist
 ```
 
-Then `http://<host>:8000/admin` (rebuild whenever you change the React code;
+Then `http://<host>:2728/admin` (rebuild whenever you change the React code;
 FastAPI picks the new files up without a restart).
 
 ## Develop
@@ -21,7 +21,7 @@ FastAPI picks the new files up without a restart).
 ```bash
 cd dashboard
 npm install
-npm run dev          # http://localhost:5173/admin/ (base is /admin/), proxies API calls to :8000
+npm run dev          # http://localhost:5173/admin/ (base is /admin/), proxies API calls to :2728
 ```
 
 ## Using it

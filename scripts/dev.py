@@ -15,12 +15,12 @@ Prerequisites:
 Notes:
     - The dev API key is fixed: local-test-key-123 (send requests with X-API-Key).
     - Sessions are stored in ./auth, uploads in ./uploads (the same folders Docker uses), logs in /tmp/wapi-logs.
-    - A webhook receiver runs on http://localhost:9001 (dashboard + /events) and the
+    - A webhook receiver runs on http://localhost:2730 (dashboard + /events) and the
       engine is wired to it (WEBHOOK_URL). Set WEBHOOK_SECRET to enable HMAC signing.
     - Outgoing messages are spaced 2s apart (SEND_DELAY_MS=2000) so automated sends
       don't trip WhatsApp's anti-spam throttling.
     - The engine prints the QR code to its log while pairing; you can also open
-      http://localhost:8000/qr.png in a browser (after `up`).
+      http://localhost:2728/qr.png in a browser (after `up`).
 """
 
 import json
@@ -36,9 +36,9 @@ ROOT = Path(__file__).resolve().parent.parent
 LOG_DIR = Path("/tmp/wapi-logs")
 STATE_FILE = Path("/tmp/wapi-dev-state.json")
 API_KEY = "local-test-key-123"
-BAILEYS_PORT = 3000
-FASTAPI_PORT = 8000
-WEBHOOK_PORT = 9001
+BAILEYS_PORT = 2729
+FASTAPI_PORT = 2728
+WEBHOOK_PORT = 2730
 
 BAILEYS_CMD = ["node", "dist/server.js"]
 FASTAPI_CMD = [

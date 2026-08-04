@@ -11,7 +11,7 @@ class FakeBaileys:
     """In-memory stand-in for the Baileys engine."""
 
     def __init__(self) -> None:
-        self.base_url = "http://test-baileys:3000"
+        self.base_url = "http://test-baileys:2729"
         self.api_key = "test-key"
         self.last_endpoint: str | None = None
         self.last_payload: dict | None = None
@@ -97,7 +97,7 @@ class FakeBaileys:
 def client(monkeypatch):
     monkeypatch.setenv("API_KEY", "test-key")
     monkeypatch.setenv("JWT_SECRET", "")
-    monkeypatch.setenv("BAILEYS_URL", "http://test-baileys:3000")
+    monkeypatch.setenv("BAILEYS_URL", "http://test-baileys:2729")
     monkeypatch.setenv("RATE_LIMIT", "100/minute")
     monkeypatch.setenv("LOG_DIR", "/tmp/wapi-test-logs")
     # Webhook receiver unreachable by design in tests: /admin-api/webhooks must degrade.

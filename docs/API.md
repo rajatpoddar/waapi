@@ -1,6 +1,6 @@
 # API Reference
 
-Base URL: `http://<host>:8000` — interactive docs at `/docs` (Swagger).
+Base URL: `http://<host>:2728` — interactive docs at `/docs` (Swagger).
 
 All responses are JSON. Send endpoints return:
 
@@ -54,7 +54,7 @@ All endpoints except `GET /health` require the API key:
 ### `GET /health` — liveness probe (no auth)
 
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:2728/health
 ```
 
 ```json
@@ -64,7 +64,7 @@ curl http://localhost:8000/health
 ### `GET /status` — all sessions
 
 ```bash
-curl http://localhost:8000/status -H "X-API-Key: $API_KEY"
+curl http://localhost:2728/status -H "X-API-Key: $API_KEY"
 ```
 
 ```json
@@ -103,7 +103,7 @@ Returns `{ "success": true, "sessions": [ ...same objects as /status... ] }`.
 Create the session if needed and connect it.
 
 ```bash
-curl -X POST http://localhost:8000/sessions/default/start -H "X-API-Key: $API_KEY"
+curl -X POST http://localhost:2728/sessions/default/start -H "X-API-Key: $API_KEY"
 ```
 
 Returns the session object (usually `state: "connecting"` — pair with the QR next).
@@ -111,7 +111,7 @@ Returns the session object (usually `state: "connecting"` — pair with the QR n
 ### `GET /sessions/{name}/qr` — QR as JSON
 
 ```bash
-curl http://localhost:8000/sessions/default/qr -H "X-API-Key: $API_KEY"
+curl http://localhost:2728/sessions/default/qr -H "X-API-Key: $API_KEY"
 ```
 
 ```json
@@ -123,7 +123,7 @@ Render the `qr` string with any QR library, or open the PNG endpoint directly.
 ### `GET /sessions/{name}/qr.png` — QR as image
 
 ```bash
-curl -o qr.png "http://localhost:8000/sessions/default/qr.png" -H "X-API-Key: $API_KEY"
+curl -o qr.png "http://localhost:2728/sessions/default/qr.png" -H "X-API-Key: $API_KEY"
 ```
 
 Open in a browser and scan with **WhatsApp → Linked devices**.
@@ -131,7 +131,7 @@ Open in a browser and scan with **WhatsApp → Linked devices**.
 ### `GET /sessions/{name}/status`
 
 ```bash
-curl http://localhost:8000/sessions/default/status -H "X-API-Key: $API_KEY"
+curl http://localhost:2728/sessions/default/status -H "X-API-Key: $API_KEY"
 ```
 
 ### `POST /sessions/{name}/stop`
@@ -162,7 +162,7 @@ Stops the session and removes it (and its credentials) entirely.
 ```
 
 ```bash
-curl -X POST http://localhost:8000/send-text \
+curl -X POST http://localhost:2728/send-text \
   -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
   -d '{"session":"default","number":"919876543210","message":"Hello"}'
 ```
@@ -177,7 +177,7 @@ Every media endpoint accepts **either**:
 1. `multipart/form-data` with a `file` field:
 
 ```bash
-curl -X POST http://localhost:8000/send-document \
+curl -X POST http://localhost:2728/send-document \
   -H "X-API-Key: $API_KEY" \
   -F "session=default" \
   -F "number=919876543210" \
@@ -232,7 +232,7 @@ a number that isn't registered will be rejected by WhatsApp with error `463`.
 ```
 
 ```bash
-curl -X POST http://localhost:8000/contacts/check \
+curl -X POST http://localhost:2728/contacts/check \
   -H "X-API-Key: $API_KEY" -H "Content-Type: application/json" \
   -d '{"numbers":["919876543210","917250580175"]}'
 ```
@@ -336,12 +336,12 @@ Example read-receipt webhook:
 ### Local webhook receiver (dev/testing)
 
 A ready-made receiver lives in `webhook_receiver/` and is started automatically by
-`python scripts/dev.py up` on port **9001**. The engine is wired to it via
-`WEBHOOK_URL=http://localhost:9001/webhook`, and webhooks are signed with
+`python scripts/dev.py up` on port **2730**. The engine is wired to it via
+`WEBHOOK_URL=http://localhost:2730/webhook`, and webhooks are signed with
 `WEBHOOK_SECRET` (HMAC-SHA256) which the receiver verifies.
 
-- **Dashboard:** http://localhost:9001 (auto-refreshes, shows every event)
-- **JSON:** http://localhost:9001/events
+- **Dashboard:** http://localhost:2730 (auto-refreshes, shows every event)
+- **JSON:** http://localhost:2730/events
 - **Log:** `logs/webhooks.log` (one JSON object per line; under `dev.py` it is
   `/tmp/wapi-logs/webhooks.log` because `LOG_DIR` is overridden)
 
@@ -362,7 +362,7 @@ print(jwt.encode({'sub': 'my-app', 'iat': int(time.time())}, 'YOUR-JWT-SECRET', 
 ```
 
 ```bash
-curl http://localhost:8000/status -H "Authorization: Bearer <jwt>"
+curl http://localhost:2728/status -H "Authorization: Bearer <jwt>"
 ```
 
 ## Postman

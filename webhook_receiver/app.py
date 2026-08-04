@@ -5,13 +5,13 @@ message.sent, message.delivered, message.read, connection.open,
 connection.close, qr, logout) so you can watch delivery/read confirmations
 in real time.
 
-Run locally (already wired into `python scripts/dev.py up`, port 9001):
+Run locally (already wired into `python scripts/dev.py up`, port 2730):
 
     fastapi/.venv/bin/python -m uvicorn webhook_receiver.app:app \\
-        --host 127.0.0.1 --port 9001
+        --host 127.0.0.1 --port 2730
 
 The engine posts to `WEBHOOK_URL` (dev.py wires it to
-http://localhost:9001/webhook). If `WEBHOOK_SECRET` is set on both sides, the
+http://localhost:2730/webhook). If `WEBHOOK_SECRET` is set on both sides, the
 engine signs the body (HMAC-SHA256 hex in `X-Webhook-Signature`) and the
 receiver verifies it before accepting the event.
 

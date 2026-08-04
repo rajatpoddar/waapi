@@ -61,7 +61,7 @@ const env = process.env
 const webhookEventsList = list(env.WEBHOOK_EVENTS)
 
 export const config: AppConfig = {
-  port: int(env.PORT, 3000),
+  port: int(env.PORT, 2729),
   apiKey: env.API_KEY || 'change-me',
   jwtSecret: env.JWT_SECRET && env.JWT_SECRET.trim().length > 0 ? env.JWT_SECRET.trim() : null,
   authDir: env.AUTH_DIR || 'auth',

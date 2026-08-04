@@ -10,8 +10,8 @@ You run two containers:
 
 | Container | Image | Port | Purpose |
 | --- | --- | --- | --- |
-| `wapi-baileys` | custom (Node 22) | internal 3000 | WhatsApp engine |
-| `wapi-fastapi` | custom (Python 3.12) | **8000** | REST API |
+| `wapi-baileys` | custom (Node 22) | internal 2729 | WhatsApp engine |
+| `wapi-fastapi` | custom (Python 3.12) | **2728** | REST API |
 
 Persistent data lives in host folders, which makes backups trivial.
 
@@ -63,15 +63,15 @@ minutes on a NAS (it compiles the `libsignal` native module — normal).
 
 ## 5. Open the firewall port
 
-**Control Panel → Security → Firewall → Edit rules**, and allow inbound TCP **8000**
+**Control Panel → Security → Firewall → Edit rules**, and allow inbound TCP **2728**
 (from your LAN, or from the internet if you intend to expose it).
 
-Test: `http://<nas-ip>:8000/health` from your browser.
+Test: `http://<nas-ip>:2728/health` from your browser.
 
 ## 6. Scan the QR code
 
 ```
-http://<nas-ip>:8000/qr.png
+http://<nas-ip>:2728/qr.png
 ```
 
 On your phone: **WhatsApp → Settings → Linked devices → Link a device** and scan.
@@ -84,10 +84,10 @@ DSM has a built-in reverse proxy so you can reach the API at
 
 1. **Control Panel → Login Portal → Advanced → Reverse Proxy → Create**.
 2. Source: protocol **HTTPS**, port **443**, hostname `wa.yourdomain.com`.
-3. Destination: protocol **HTTP**, port **8000**, hostname `localhost`.
+3. Destination: protocol **HTTP**, port **2728**, hostname `localhost`.
 4. Enable the Let's Encrypt certificate for the hostname.
 
-Then open **Control Panel → Security → Firewall** and **close inbound 8000** so the
+Then open **Control Panel → Security → Firewall** and **close inbound 2728** so the
 API is only reachable through the proxy. WAPI already honours `X-Forwarded-For` for
 rate limiting and CORS can be restricted via `CORS_ORIGINS`.
 
@@ -122,7 +122,7 @@ cd /docker/wapi && git pull && sudo docker compose up -d --build
 
 | Symptom | Fix |
 | --- | --- |
-| Port 8000 not reachable | Enable the firewall rule (step 5); on some models also check **Control Panel → Security → Firewall → Enable** |
+| Port 2728 not reachable | Enable the firewall rule (step 5); on some models also check **Control Panel → Security → Firewall → Enable** |
 | Build fails with `g++`/`python` errors | The Baileys image needs build tools — this repo's Dockerfile installs them automatically; make sure you're using the supplied `baileys/Dockerfile` and have internet access during the first build |
 | Slow builds / timeouts | First build downloads Node/apt packages; give it 10+ minutes; ensure the NAS has enough free RAM (4 GB+ recommended) |
 | Containers restart in a loop | Check `docker compose logs baileys`; the health check has a 30 s start period — this is normal during the first seconds |
